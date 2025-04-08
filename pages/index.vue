@@ -11,7 +11,7 @@
     </div>
 
     <!-- Charts Section -->
-    <template v-if="isLoading">
+    <template v-if="store.isLoading">
       <div class="flex justify-center items-center h-96">
         <div
           class="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"
@@ -76,7 +76,7 @@
 
         <!-- Modal Popup -->
         <DxPopup
-          v-model:visible="popupVisible"
+          v-model:visible="store.popupVisible"
           :width="400"
           :height="300"
           :show-title="true"
@@ -86,9 +86,9 @@
         >
           <template #default>
             <div class="p-4">
-              <p><strong>Action:</strong> {{ selectedRow?.action }}</p>
-              <p><strong>User:</strong> {{ selectedRow?.user }}</p>
-              <p><strong>Time:</strong> {{ selectedRow?.time }}</p>
+              <p><strong>Action:</strong> {{ store.selectedRow?.action }}</p>
+              <p><strong>User:</strong> {{ store.selectedRow?.user }}</p>
+              <p><strong>Time:</strong> {{ store.selectedRow?.time }}</p>
             </div>
           </template>
         </DxPopup>
@@ -106,19 +106,18 @@ import { ref } from 'vue';
 import { DxChart, DxSeries, DxArgumentAxis } from 'devextreme-vue/chart';
 import { DxDataGrid } from 'devextreme-vue/data-grid';
 import { DxPopup } from 'devextreme-vue/popup';
-
 import { DxPieChart } from 'devextreme-vue/pie-chart';
 import SummaryCard from '../components/SummaryCard.vue';
+import { useDashboardStore } from '../stores/dashboard';
 
-const isLoading = ref(true);
+const store = useDashboardStore();
 
 onMounted(() => {
   setTimeout(() => {
-    isLoading.value = false;
+    store.finishLoading();
   }, 1500);
 });
 
-// Sample data
 const chartData = ref([
   { date: '2025-04-01', visits: 120 },
   { date: '2025-04-02', visits: 160 },
@@ -145,9 +144,6 @@ const regionData = ref([
   { month: 'Mar', north: 300, south: 160 },
   { month: 'Apr', north: 400, south: 200 },
 ]);
-
-const popupVisible = ref(false);
-const selectedRow = ref(null);
 
 const activityData = ref([
   { id: 1, action: 'Login', user: 'Alice', time: '2025-04-07 10:30' },
@@ -180,7 +176,6 @@ const columns = [
 ];
 
 const onRowClick = ({ data }) => {
-  selectedRow.value = data;
-  popupVisible.value = true;
+  store.showPopup(data);
 };
 </script>
