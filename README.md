@@ -1,4 +1,6 @@
-# Nuxt Docker Starter
+# Preview
+
+![My Project](assets/img/thumbnail.png)
 
 ## Docker Setup
 
